@@ -1,0 +1,42 @@
+[build-system]
+requires = ["hatchling"]
+build-backend = "hatchling.build"
+
+[project]
+name = "gamebricks"
+version = "0.1.1"
+description = "Build real games with a few lines of Python. A first coding language disguised as a game maker."
+readme = "README.md"
+requires-python = ">=3.12"
+license = { text = "MIT" }
+authors = [{ name = "Rama Kishan Polepalli" }]
+keywords = ["kids", "education", "games", "beginner", "teaching", "pygame"]
+classifiers = [
+  "Intended Audience :: Education",
+  "Programming Language :: Python :: 3.12",
+  "Topic :: Education",
+  "Topic :: Games/Entertainment",
+  "License :: OSI Approved :: MIT License",
+]
+dependencies = ["pygame>=2.5"]
+
+[project.optional-dependencies]
+dev = ["pytest>=8"]
+
+[project.scripts]
+gamebricks = "gamebricks.__main__:main"
+
+[tool.hatch.build.targets.wheel]
+packages = ["src/gamebricks"]
+
+# ship the example games INSIDE the package, so `gamebricks copy` can hand
+# them to anyone who installed with pip and never cloned the repo
+[tool.hatch.build.targets.wheel.force-include]
+"examples" = "gamebricks/examples"
+
+[tool.hatch.build.targets.sdist]
+include = ["src/gamebricks", "examples", "tests", "README.md", "LICENSE",
+           "pyproject.toml"]
+
+[tool.pytest.ini_options]
+testpaths = ["tests"]

@@ -1,0 +1,126 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+<link rel="preconnect" href="https://fonts.googleapis.com" />
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin="" />
+<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;700&family=JetBrains+Mono:wght@400;700&display=swap" rel="stylesheet" />
+<style>
+doc-page:not(:defined){visibility:hidden}
+body{margin:0}
+a{color:#2F7F5B}
+a:hover{color:#16192E}
+</style>
+<script src="./doc-page.js"></script>
+</helmet>
+
+<doc-page size="letter">
+<section class="page" data-screen-label="01 Teacher sheet" style="box-sizing:border-box;height:100%;padding:40px 44px;background:#FBF8F2;color:#16192E;font-family:'Space Grotesk',Helvetica,sans-serif;display:flex;flex-direction:column;gap:15px">
+
+  <header style="display:flex;justify-content:space-between;align-items:flex-end;border-bottom:3px solid #16192E;padding-bottom:10px">
+    <div style="display:flex;flex-direction:column;gap:3px">
+      <div style="font-size:30px;font-weight:700;letter-spacing:-0.02em;line-height:1.05">GameBricks · for teachers &amp; parents</div>
+      <div style="font-size:13.5px;color:#5A5F78">What each example teaches, and what to say when a kid is stuck. Ages 9–14, no games experience needed.</div>
+    </div>
+    <div style="flex:0 0 150px;font-family:'JetBrains Mono',monospace;font-size:11px;color:#5A5F78;text-align:right;line-height:1.5;white-space:nowrap">pip install -e .<br />python -m gamebricks</div>
+  </header>
+
+  <div style="display:grid;grid-template-columns:152px 1fr 1fr;gap:0;border:1.5px solid #E4DFD3;border-radius:9px;overflow:hidden;font-size:12px">
+
+    <div style="background:#16192E;color:#F2B705;padding:7px 10px;font-size:10px;font-weight:700;letter-spacing:0.1em">EXAMPLE</div>
+    <div style="background:#16192E;color:#F2B705;padding:7px 10px;font-size:10px;font-weight:700;letter-spacing:0.1em">PYTHON IT INTRODUCES</div>
+    <div style="background:#16192E;color:#F2B705;padding:7px 10px;font-size:10px;font-weight:700;letter-spacing:0.1em">MATHS &amp; THINKING</div>
+
+    <div style="padding:8px 10px;background:#fff;border-top:1px solid #EFEBE1"><div style="font-family:'JetBrains Mono',monospace;font-size:11px;font-weight:700">01_my_first_game</div><div style="color:#6B7189;font-size:11px">walk to two coins</div></div>
+    <div style="padding:8px 10px;background:#fff;border-top:1px solid #EFEBE1;line-height:1.5">Giving a command with settings — <span style="font-family:'JetBrains Mono',monospace">coin(across=3, up=5)</span>. These are <strong>keyword arguments</strong>, real Python they keep forever.</div>
+    <div style="padding:8px 10px;background:#fff;border-top:1px solid #EFEBE1;line-height:1.5">Coordinates on two axes. <strong>Counting from 0</strong> — genuinely hard at nine. Turn on <span style="font-family:'JetBrains Mono',monospace">show_grid()</span> and let them count with a finger.</div>
+
+    <div style="padding:8px 10px;background:#FDFCF8;border-top:1px solid #EFEBE1"><div style="font-family:'JetBrains Mono',monospace;font-size:11px;font-weight:700">02_catch</div><div style="color:#6B7189;font-size:11px">falling stars</div></div>
+    <div style="padding:8px 10px;background:#FDFCF8;border-top:1px solid #EFEBE1;line-height:1.5">A <strong>loop</strong> (<span style="font-family:'JetBrains Mono',monospace">@every(1)</span>), a <strong>rule</strong> (<span style="font-family:'JetBrains Mono',monospace">@when_touch</span>), a <strong>function with a parameter</strong>, and <span style="font-family:'JetBrains Mono',monospace">score += 1</span>.</div>
+    <div style="padding:8px 10px;background:#FDFCF8;border-top:1px solid #EFEBE1;line-height:1.5">Rates — one star per second. Speed as a number you feel. <strong>Modulo</strong> arrives naturally as "every 5th star".</div>
+
+    <div style="padding:8px 10px;background:#fff;border-top:1px solid #EFEBE1"><div style="font-family:'JetBrains Mono',monospace;font-size:11px;font-weight:700">03_chase</div><div style="color:#6B7189;font-size:11px">dodge the ghosts</div></div>
+    <div style="padding:8px 10px;background:#fff;border-top:1px solid #EFEBE1;line-height:1.5">Writing <strong>two rules side by side</strong> — one for ghosts, one for hearts — and asking an object to act: <span style="font-family:'JetBrains Mono',monospace">hero.say("ouch")</span>.</div>
+    <div style="padding:8px 10px;background:#fff;border-top:1px solid #EFEBE1;line-height:1.5"><strong>Balance.</strong> Tune <span style="font-family:'JetBrains Mono',monospace">hearts()</span> and ghost speed until it's hard but fair. That is hypothesis testing.</div>
+
+    <div style="padding:8px 10px;background:#FDFCF8;border-top:1px solid #EFEBE1"><div style="font-family:'JetBrains Mono',monospace;font-size:11px;font-weight:700">04_maze</div><div style="color:#6B7189;font-size:11px">a maze they draw</div></div>
+    <div style="padding:8px 10px;background:#FDFCF8;border-top:1px solid #EFEBE1;line-height:1.5"><strong>Multi-line strings</strong>, and the idea that <strong>text can be data</strong> — the picture between the quotes IS the level.</div>
+    <div style="padding:8px 10px;background:#FDFCF8;border-top:1px solid #EFEBE1;line-height:1.5">A <strong>2D grid</strong>: rows and columns. Then the real question — is every coin actually reachable? They must test it.</div>
+
+    <div style="padding:8px 10px;background:#fff;border-top:1px solid #EFEBE1"><div style="font-family:'JetBrains Mono',monospace;font-size:11px;font-weight:700">05_platformer</div><div style="color:#6B7189;font-size:11px">jump to the flag</div></div>
+    <div style="padding:8px 10px;background:#fff;border-top:1px solid #EFEBE1;line-height:1.5">Settings that <strong>interact</strong>: <span style="font-family:'JetBrains Mono',monospace">jump_power(3)</span> against the height of every platform. One number changes everything.</div>
+    <div style="padding:8px 10px;background:#fff;border-top:1px solid #EFEBE1;line-height:1.5"><strong>Estimation and iteration.</strong> Put the flag out of reach and nothing errors — they play, find it impossible, and redesign.</div>
+
+    <div style="padding:8px 10px;background:#FDFCF8;border-top:1px solid #EFEBE1"><div style="font-family:'JetBrains Mono',monospace;font-size:11px;font-weight:700">06_keys_and_doors</div><div style="color:#6B7189;font-size:11px">locked door, 2 levels</div></div>
+    <div style="padding:8px 10px;background:#FDFCF8;border-top:1px solid #EFEBE1;line-height:1.5">Several things in one call — <span style="font-family:'JetBrains Mono',monospace">levels(a, b)</span> — and <strong>state that persists</strong>: the keys you're carrying.</div>
+    <div style="padding:8px 10px;background:#FDFCF8;border-top:1px solid #EFEBE1;line-height:1.5"><strong>Dependency and sequence.</strong> B needs A first. The first real taste of designing a puzzle rather than a playground.</div>
+
+    <div style="padding:8px 10px;background:#fff;border-top:1px solid #EFEBE1"><div style="font-family:'JetBrains Mono',monospace;font-size:11px;font-weight:700">07_remix_a_builtin</div><div style="color:#6B7189;font-size:11px">change a finished game</div></div>
+    <div style="padding:8px 10px;background:#fff;border-top:1px solid #EFEBE1;line-height:1.5"><strong>Importing a module</strong> and reading code someone else wrote — <span style="font-family:'JetBrains Mono',monospace">gamebricks.load("platformer")</span>, then editing it.</div>
+    <div style="padding:8px 10px;background:#fff;border-top:1px solid #EFEBE1;line-height:1.5"><strong>Abstraction.</strong> Noticing that all five games are the same six bricks, so a trick learned in one works in all of them.</div>
+  </div>
+
+  <sc-if value="{{ showSessionPlan }}" hint-placeholder-val="{{ true }}">
+  <div style="display:grid;grid-template-columns:1fr 1fr;gap:14px">
+    <div style="background:#16192E;color:#FBF8F2;border-radius:9px;padding:13px 15px;display:flex;flex-direction:column;gap:7px">
+      <div style="font-size:10px;font-weight:700;letter-spacing:0.12em;color:#F2B705">A 40-MINUTE SESSION</div>
+      <div style="display:flex;flex-direction:column;gap:5px;font-size:12px;line-height:1.45">
+        <div><span style="font-family:'JetBrains Mono',monospace;color:#F2B705">05′</span> &nbsp;Play a ready-made game. Don't open the file yet.</div>
+        <div><span style="font-family:'JetBrains Mono',monospace;color:#F2B705">10′</span> &nbsp;Change three numbers. <strong>Predict out loud first</strong>, then run.</div>
+        <div><span style="font-family:'JetBrains Mono',monospace;color:#F2B705">10′</span> &nbsp;Draw their own level picture.</div>
+        <div><span style="font-family:'JetBrains Mono',monospace;color:#F2B705">10′</span> &nbsp;Make it <em>fair</em> — tune hearts, speed, jump power.</div>
+        <div><span style="font-family:'JetBrains Mono',monospace;color:#F2B705">05′</span> &nbsp;Swap seats and play each other's game.</div>
+      </div>
+    </div>
+
+    <div style="background:#fff;border:1.5px solid #E4DFD3;border-radius:9px;padding:13px 15px;display:flex;flex-direction:column;gap:7px">
+      <div style="font-size:10px;font-weight:700;letter-spacing:0.12em;color:#2F7F5B">WHEN THEY'RE STUCK, SAY THIS</div>
+      <div style="display:flex;flex-direction:column;gap:5px;font-size:12px;line-height:1.45">
+        <div>“Run it and show me what happens.”</div>
+        <div>“What did you expect? What happened instead?”</div>
+        <div>“Read the message out loud — it tells you the fix.”</div>
+        <div>“Change one number and run it again.”</div>
+        <div style="color:#6B7189;padding-top:2px">Don't fix their file for them. Ask them to describe the square they want, and let them find the numbers.</div>
+      </div>
+    </div>
+  </div>
+  </sc-if>
+
+  <sc-if value="{{ showGaps }}" hint-placeholder-val="{{ true }}">
+  <div style="display:grid;grid-template-columns:1fr 1fr;gap:14px">
+    <div style="display:flex;flex-direction:column;gap:6px">
+      <div style="font-size:10px;font-weight:700;letter-spacing:0.12em;color:#5A5F78">YOU'LL KNOW IT LANDED WHEN</div>
+      <div style="font-size:12px;line-height:1.5;color:#16192E;text-wrap:pretty">They predict the result before running. They fix an unreachable flag without help. They change <span style="font-family:'JetBrains Mono',monospace">hearts()</span> so a younger sibling can win. They ask for something the package can't do yet — that's the moment to go looking together.</div>
+    </div>
+    <div style="display:flex;flex-direction:column;gap:6px">
+      <div style="font-size:10px;font-weight:700;letter-spacing:0.12em;color:#5A5F78">WHAT THIS DOESN'T TEACH</div>
+      <div style="font-size:12px;line-height:1.5;color:#16192E;text-wrap:pretty">Writing their own classes, files, algorithms, recursion, testing, version control. This is the on-ramp. The step out is a kid outgrowing <span style="font-family:'JetBrains Mono',monospace">hearts()</span> and writing their own spawn logic with <span style="font-family:'JetBrains Mono',monospace">free_square()</span>.</div>
+    </div>
+  </div>
+  </sc-if>
+
+  <div style="margin-top:auto;display:flex;justify-content:space-between;align-items:center;border-top:1.5px solid #E4DFD3;padding-top:9px;font-size:10.5px;color:#6B7189;font-family:'JetBrains Mono',monospace">
+    <span>WHILE PLAYING: R RESTART · P PAUSE · G GRID · M MUTE · ESC QUIT</span>
+    <span>GAMEBRICKS · TEACHER SHEET</span>
+  </div>
+</section>
+</doc-page>
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props="{&quot;showSessionPlan&quot;:{&quot;editor&quot;:&quot;boolean&quot;,&quot;default&quot;:true,&quot;tsType&quot;:&quot;boolean&quot;,&quot;section&quot;:&quot;Panels&quot;},&quot;showGaps&quot;:{&quot;editor&quot;:&quot;boolean&quot;,&quot;default&quot;:true,&quot;tsType&quot;:&quot;boolean&quot;,&quot;section&quot;:&quot;Panels&quot;}}">
+class Component extends DCLogic {
+  renderVals() {
+    return {
+      showSessionPlan: this.props.showSessionPlan ?? true,
+      showGaps: this.props.showGaps ?? true,
+    };
+  }
+}
+</script>
+</body>
+</html>
