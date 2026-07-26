@@ -1,0 +1,472 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>GameBricks — build real games with a few lines of Python</title>
+<meta name="description" content="A first coding language disguised as a game maker. Kids aged 9–14 place things on a grid with two numbers, and get a real playable game." />
+<meta property="og:title" content="GameBricks" />
+<meta property="og:description" content="Build real games with a few lines of Python. Ages 9–14." />
+<link rel="preconnect" href="https://fonts.googleapis.com" />
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;700&family=JetBrains+Mono:wght@400;700&display=swap" rel="stylesheet" />
+<style>
+  :root{
+    --bg:#FBF8F2; --ink:#16192E; --muted:#6B7189; --line:#E4DFD3;
+    --yellow:#F2B705; --green:#2F8F63; --purple:#7B5BD6; --red:#E25A5A;
+    --paper:#fff;
+  }
+  *{box-sizing:border-box}
+  html{scroll-behavior:smooth}
+  body{
+    margin:0;background:var(--bg);color:var(--ink);
+    font-family:'Space Grotesk',system-ui,sans-serif;
+    -webkit-font-smoothing:antialiased;text-wrap:pretty;
+  }
+  a{color:var(--green)}
+  a:hover{color:var(--ink)}
+  code,pre,kbd{font-family:'JetBrains Mono',ui-monospace,monospace}
+  .wrap{max-width:1080px;margin:0 auto;padding:0 24px}
+  section{padding:64px 0;border-top:1.5px solid var(--line)}
+  h2{font-size:clamp(24px,3.4vw,34px);margin:0 0 8px;letter-spacing:-0.02em}
+  .lede{color:var(--muted);font-size:16px;margin:0 0 28px;max-width:64ch}
+  .eyebrow{font-size:11px;font-weight:700;letter-spacing:.14em;color:var(--muted);margin-bottom:10px}
+
+  /* ---------- hero ---------- */
+  header{background:var(--ink);color:var(--bg);padding:60px 0 64px}
+  .brand{display:flex;align-items:center;gap:12px;font-size:14px;letter-spacing:.02em;color:#A6ABC4}
+  .brand b{color:var(--bg);font-size:17px;letter-spacing:-0.01em}
+  h1{font-size:clamp(38px,6.4vw,68px);line-height:1.02;letter-spacing:-0.035em;margin:26px 0 14px;max-width:15ch}
+  h1 em{font-style:normal;color:var(--yellow)}
+  .sub{font-size:clamp(16px,2vw,20px);color:#C2C7DC;max-width:52ch;line-height:1.5;margin:0}
+  .chips{display:flex;flex-wrap:wrap;gap:8px;margin-top:26px}
+  .chip{font-size:12px;padding:5px 11px;border:1.5px solid #38406A;border-radius:999px;color:#C2C7DC}
+  .chip b{color:var(--yellow);font-weight:700}
+  .cta{display:flex;flex-wrap:wrap;gap:10px;margin-top:28px}
+  .btn{
+    display:inline-block;padding:12px 20px;border-radius:9px;font-size:15px;font-weight:500;
+    text-decoration:none;border:1.5px solid transparent;transition:transform .12s ease;
+  }
+  .btn:hover{transform:translateY(-1px)}
+  .btn-y{background:var(--yellow);color:var(--ink)}
+  .btn-y:hover{color:var(--ink)}
+  .btn-o{border-color:#38406A;color:var(--bg)}
+  .btn-o:hover{color:var(--yellow);border-color:var(--yellow)}
+  .install{
+    margin-top:26px;background:#0E1122;border:1.5px solid #2B3159;border-radius:10px;
+    padding:14px 16px;font-size:14px;color:#C2C7DC;line-height:1.85;overflow-x:auto;
+    white-space:pre;font-family:'JetBrains Mono',ui-monospace,monospace;
+  }
+  .install .c{color:#6E769C}
+  .install .g{color:#8ED6A8}
+
+  /* ---------- playground ---------- */
+  .play{display:grid;grid-template-columns:minmax(0,340px) minmax(0,1fr);gap:28px;align-items:start}
+  .palette{display:flex;flex-wrap:wrap;gap:7px;margin-bottom:14px}
+  .pal{
+    display:flex;align-items:center;gap:7px;padding:6px 11px;border-radius:8px;cursor:pointer;
+    border:1.5px solid var(--line);background:var(--paper);font-size:13px;font-family:'JetBrains Mono',monospace;
+  }
+  .pal[aria-pressed="true"]{border-color:var(--ink);background:var(--ink);color:var(--bg)}
+  .dot{width:13px;height:13px;border-radius:50%;flex:0 0 13px}
+  #grid{
+    width:100%;aspect-ratio:1;display:grid;grid-template-columns:repeat(8,1fr);
+    background:var(--paper);border:2px solid var(--ink);border-radius:4px;overflow:hidden;
+  }
+  .cell{
+    border-right:1px solid #EDE8DC;border-bottom:1px solid #EDE8DC;
+    display:flex;align-items:center;justify-content:center;cursor:pointer;position:relative;
+  }
+  .cell:nth-child(8n){border-right:0}
+  .cell:nth-last-child(-n+8){border-bottom:0}
+  .cell:hover{background:#FAF6EA}
+  .cell .g{width:56%;height:56%;border-radius:50%;pointer-events:none}
+  /* one label per track, centred — space-between fans them out of line.
+     the row/col layout keeps .ycol spanning the GRID only, not the x-axis. */
+  .gridrow{display:grid;grid-template-columns:auto minmax(0,1fr);gap:0 7px}
+  .ycol{grid-row:1;display:grid;grid-template-rows:repeat(8,1fr);place-items:center;font-family:'JetBrains Mono',monospace;font-size:11px;color:var(--muted)}
+  .axis{grid-column:2;display:grid;grid-template-columns:repeat(8,1fr);place-items:center;font-family:'JetBrains Mono',monospace;font-size:11px;color:var(--muted);margin-top:5px}
+  .hint{font-size:13px;color:var(--muted);margin-top:12px}
+
+  pre.code{
+    margin:0;background:var(--ink);color:#E6E9F5;border-radius:11px;padding:20px 22px;
+    font-size:13.5px;line-height:1.75;overflow-x:auto;min-height:340px;
+  }
+  .k{color:#FF8FA3}.s{color:#8ED6A8}.n{color:var(--yellow)}.cm{color:#6E769C}.f{color:#9DC4FF}
+
+  /* ---------- bricks ---------- */
+  .bricks{display:grid;grid-template-columns:repeat(auto-fit,minmax(250px,1fr));gap:14px}
+  .brick{background:var(--paper);border:1.5px solid var(--line);border-radius:11px;padding:16px 18px}
+  .brick .num{font-family:'JetBrains Mono',monospace;font-size:11px;font-weight:700;color:var(--green);letter-spacing:.1em}
+  .brick h3{margin:6px 0 9px;font-size:16px;letter-spacing:-0.01em}
+  .brick pre{margin:0;font-size:12.5px;line-height:1.6;color:var(--ink);white-space:pre-wrap;word-break:break-word}
+  .brick p{margin:9px 0 0;font-size:13px;color:var(--muted);line-height:1.5}
+
+  /* ---------- tables ---------- */
+  table{width:100%;border-collapse:collapse;font-size:14px;background:var(--paper);border:1.5px solid var(--line);border-radius:11px;overflow:hidden}
+  th{background:var(--ink);color:var(--yellow);font-size:10.5px;letter-spacing:.1em;text-align:left;padding:9px 14px;font-weight:700}
+  td{padding:10px 14px;border-top:1px solid #EFEBE1;vertical-align:top;line-height:1.5}
+  td code{font-size:12.5px;background:#F4F0E6;padding:1px 5px;border-radius:4px}
+  tbody tr:nth-child(even){background:#FDFCF8}
+
+  /* ---------- learn ---------- */
+  .cols{display:grid;grid-template-columns:repeat(auto-fit,minmax(240px,1fr));gap:22px}
+  .cols h3{font-size:14px;margin:0 0 10px;letter-spacing:-0.01em}
+  .cols ul{margin:0;padding-left:17px;font-size:13.5px;color:var(--muted);line-height:1.75}
+  .cols li strong{color:var(--ink);font-weight:500}
+
+  .split{display:grid;grid-template-columns:repeat(auto-fit,minmax(280px,1fr));gap:16px}
+  .panel{border-radius:11px;padding:20px 22px}
+  .panel.dark{background:var(--ink);color:var(--bg)}
+  .panel.dark h3{color:var(--yellow)}
+  .panel.light{background:var(--paper);border:1.5px solid var(--line)}
+  .panel h3{margin:0 0 10px;font-size:15px}
+  .panel p,.panel li{font-size:13.5px;line-height:1.6;color:inherit;opacity:.92}
+  .panel.light p,.panel.light li{color:var(--muted)}
+  .panel ul{margin:0;padding-left:17px}
+
+  footer{background:var(--ink);color:#8189AB;padding:36px 0;font-size:13px}
+  footer a{color:#C2C7DC}
+  footer a:hover{color:var(--yellow)}
+  .frow{display:flex;flex-wrap:wrap;gap:18px;justify-content:space-between;align-items:center}
+  kbd{background:#F4F0E6;border:1.5px solid var(--line);border-bottom-width:2.5px;border-radius:5px;padding:1px 6px;font-size:12px}
+
+  @media (max-width:820px){
+    .play{grid-template-columns:1fr}
+    pre.code{min-height:0}
+    section{padding:48px 0}
+  }
+</style>
+</head>
+<body>
+
+<header>
+  <div class="wrap">
+    <div class="brand">🧱 <b>GameBricks</b> <span>· Python for ages 9–14</span></div>
+    <h1>Build real games by <em>changing a number</em>.</h1>
+    <p class="sub">Not a tutorial. Not drag-and-drop. A kid types two numbers, and a thing moves on the screen. That's the whole loop — and it's why the learning sticks.</p>
+    <div class="chips">
+      <span class="chip"><b>5</b> games ready to play</span>
+      <span class="chip"><b>7</b> examples to edit</span>
+      <span class="chip"><b>1</b> grid, 2 numbers</span>
+      <span class="chip">real <b>Python</b>, not blocks</span>
+    </div>
+    <div class="install">
+<span class="c"># play something in the next ten seconds</span>
+$ pip install <span class="g">gamebricks</span>
+$ gamebricks maze
+<span class="c"># then get the code and change it</span>
+$ gamebricks copy</div>
+    <div class="cta">
+      <a class="btn btn-y" href="#playground">Try the grid ↓</a>
+      <a class="btn btn-o" href="https://github.com/kishanpolepalli/gamebricks">View on GitHub</a>
+      <a class="btn btn-o" href="#teachers">For teachers</a>
+    </div>
+  </div>
+</header>
+
+<section id="playground">
+  <div class="wrap">
+    <div class="eyebrow">TRY IT RIGHT HERE · NOTHING TO INSTALL</div>
+    <h2>The one idea: <code>across</code> and <code>up</code></h2>
+    <p class="lede">Everything sits on a grid, and everything uses the same two numbers. <code>across = 0</code> is the far left; <code>up = 0</code> is the bottom row — just like a graph in maths class. Pick a brick, click a square, and watch the Python write itself.</p>
+
+    <div class="play">
+      <div>
+        <div class="palette" id="palette"></div>
+        <div class="gridrow">
+          <div class="ycol"><span>7</span><span>6</span><span>5</span><span>4</span><span>3</span><span>2</span><span>1</span><span>0</span></div>
+          <div id="grid"></div>
+          <div class="axis"><span>0</span><span>1</span><span>2</span><span>3</span><span>4</span><span>5</span><span>6</span><span>7</span></div>
+        </div>
+        <p class="hint">Click an empty square to place · click a filled one to remove it. This is exactly what a kid does in their editor, one line at a time.</p>
+      </div>
+      <pre class="code" id="out"></pre>
+    </div>
+  </div>
+</section>
+
+<section>
+  <div class="wrap">
+    <div class="eyebrow">THE SIX BRICKS</div>
+    <h2>Every game is these six, mixed differently</h2>
+    <p class="lede">Catch, chase, maze, platformer, puzzle — same six pieces, different settings. Learn them once and the second game is almost free.</p>
+    <div class="bricks">
+      <div class="brick"><div class="num">01 · WHO YOU ARE</div><h3>The player</h3><pre><span class="f">hero</span> = game.player(
+    shape=<span class="s">"hero"</span>,
+    control=<span class="s">"arrows"</span>)</pre><p>arrows · wasd · mouse · arrows+jump</p></div>
+      <div class="brick"><div class="num">02 · HOW THINGS MOVE</div><h3>Movement</h3><pre>game.ghost(across=<span class="n">4</span>, up=<span class="n">6</span>,
+    move=<span class="s">"chases"</span>)</pre><p>still · falls · drifts · chases · bounces</p></div>
+      <div class="brick"><div class="num">03 · AGAIN AND AGAIN</div><h3>A loop</h3><pre>@game.every(<span class="n">1</span>)
+<span class="k">def</span> drop():
+    game.drop(<span class="s">"star"</span>)</pre><p>Every 1 second, a star falls in.</p></div>
+      <div class="brick"><div class="num">04 · WHEN TWO THINGS TOUCH</div><h3>A rule</h3><pre>@game.when_touch(hero, <span class="s">"star"</span>)
+<span class="k">def</span> caught(star):
+    game.score += <span class="n">1</span></pre><p>burst() · say("hi") · grow() · remove()</p></div>
+      <div class="brick"><div class="num">05 · WHAT YOU KEEP</div><h3>Score &amp; lives</h3><pre>game.score += <span class="n">1</span>
+game.lives -= <span class="n">1</span>
+game.hearts(<span class="n">3</span>)</pre><p>Extra lives appear as you play. You choose how many.</p></div>
+      <div class="brick"><div class="num">06 · HOW YOU WIN</div><h3>One clear goal</h3><pre>game.win_when(
+  game.collected_all(<span class="s">"coin"</span>))</pre><p>score_reaches · survived · reached("flag")</p></div>
+    </div>
+  </div>
+</section>
+
+<section>
+  <div class="wrap">
+    <div class="eyebrow">DRAW A LEVEL WITH YOUR KEYBOARD</div>
+    <h2>What you type is what you see</h2>
+    <p class="lede">One character per square, right way up. Redraw the picture and the level changes — no coordinates to count at all.</p>
+    <div class="split">
+      <pre class="code" style="min-height:0">game.level(<span class="s">"""</span>
+<span class="s">    #########</span>
+<span class="s">    #@..#..c#</span>
+<span class="s">    #.#.#.#.#</span>
+<span class="s">    #.#...#.#</span>
+<span class="s">    #.###.#g#</span>
+<span class="s">    #c..#.#.#</span>
+<span class="s">    ##.##.#c#</span>
+<span class="s">    #########</span>
+<span class="s">"""</span>)
+
+<span class="cm"># several pictures become levels —</span>
+<span class="cm"># win one and the next loads itself</span>
+game.levels(one, two, three)</pre>
+      <div>
+        <table>
+          <thead><tr><th>CHARACTER</th><th>WHAT IT BUILDS</th></tr></thead>
+          <tbody>
+            <tr><td><code>#</code> <code>=</code></td><td>wall · platform</td></tr>
+            <tr><td><code>@</code></td><td>you, the player</td></tr>
+            <tr><td><code>c</code> <code>*</code></td><td>coin · star — score a point</td></tr>
+            <tr><td><code>k</code> <code>d</code></td><td>key · door — the door opens when you hold the key</td></tr>
+            <tr><td><code>g</code> <code>^</code></td><td>ghost · spike — these cost a life</td></tr>
+            <tr><td><code>H</code> <code>F</code></td><td>heart · flag — a life, and the finish</td></tr>
+            <tr><td><code>.</code></td><td>empty space</td></tr>
+          </tbody>
+        </table>
+        <p class="hint">Teach it your own: <code>game.legend(x="ghost")</code></p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section>
+  <div class="wrap">
+    <div class="eyebrow">FIVE GAMES, ONE SHAPE</div>
+    <h2>Play first. Then open the file.</h2>
+    <p class="lede">Every ready-made game is written in the same order with the same promises — 3 lives, always losable, exactly one win rule. The test suite enforces it, so the fifth game feels like the first.</p>
+    <table>
+      <thead><tr><th>GAME</th><th>PLAY IT</th><th>HOW YOU WIN</th><th>WHAT CAN GET YOU</th></tr></thead>
+      <tbody>
+        <tr><td>🌟 catch</td><td><code>gamebricks catch</code></td><td><code>score_reaches(15)</code></td><td>missing a star</td></tr>
+        <tr><td>👻 chase</td><td><code>gamebricks chase</code></td><td><code>survived(20)</code></td><td>ghosts that hunt you</td></tr>
+        <tr><td>🪙 maze</td><td><code>gamebricks maze</code></td><td><code>collected_all("coin")</code></td><td>a ghost in the corridors</td></tr>
+        <tr><td>🚩 platformer</td><td><code>gamebricks platformer</code></td><td><code>reached("flag")</code></td><td>falling off</td></tr>
+        <tr><td>🔑 keys</td><td><code>gamebricks keys</code></td><td>walk through the last door</td><td>a ghost, on both levels</td></tr>
+      </tbody>
+    </table>
+    <p class="hint">While playing: <kbd>R</kbd> restart · <kbd>P</kbd> pause · <kbd>G</kbd> grid · <kbd>M</kbd> mute · <kbd>Esc</kbd> quit</p>
+  </div>
+</section>
+
+<section id="learn">
+  <div class="wrap">
+    <div class="eyebrow">WHAT THEY ACTUALLY LEARN</div>
+    <h2>Real Python, learned sideways</h2>
+    <p class="lede">Not "concepts covered" — these are the lines a kid types on their first afternoon.</p>
+    <table style="margin-bottom:26px">
+      <thead><tr><th>THEY TYPE</th><th>THEY'RE LEARNING</th><th>THE REAL NAME</th></tr></thead>
+      <tbody>
+        <tr><td><code>game.coin(across=3, up=5)</code></td><td>giving a command with settings</td><td>keyword arguments</td></tr>
+        <tr><td><code>game.score += 1</code></td><td>a number that changes</td><td>mutable state</td></tr>
+        <tr><td><code>@game.every(1)</code></td><td>doing something repeatedly</td><td>a loop</td></tr>
+        <tr><td><code>def caught(star):</code></td><td>a reusable instruction that takes a thing</td><td>a function with a parameter</td></tr>
+        <tr><td><code>star.burst()</code></td><td>asking a thing to do something</td><td>objects, methods, dot notation</td></tr>
+        <tr><td><code>if game.score % 5 == 0:</code></td><td>making a decision</td><td>a condition, modulo</td></tr>
+      </tbody>
+    </table>
+    <div class="cols">
+      <div>
+        <h3>📐 Maths, without calling it maths</h3>
+        <ul>
+          <li><strong>Cartesian coordinates</strong> — <code>across</code>/<code>up</code> from the bottom-left <em>is</em> a graph</li>
+          <li><strong>Counting from zero</strong>, made concrete instead of abstract</li>
+          <li><strong>2D grids</strong> — the level picture is an array they wrote by hand</li>
+          <li><strong>Rates &amp; estimation</strong> — "can I jump 3 squares to reach up=6?"</li>
+        </ul>
+      </div>
+      <div>
+        <h3>🧠 Computational thinking</h3>
+        <ul>
+          <li><strong>Decomposition</strong> — every game is the same six bricks</li>
+          <li><strong>Build–test–fix</strong> — put the flag out of reach and <em>nothing errors</em>. They play, find it impossible, redesign</li>
+          <li><strong>Cause and effect</strong> — <code>speed=8</code> vs <code>speed=3</code> is hypothesis testing</li>
+        </ul>
+      </div>
+      <div>
+        <h3>💛 And the part that decides if they continue</h3>
+        <ul>
+          <li><strong>Authorship</strong> — it's their level, not a worksheet</li>
+          <li><strong>Failure is playable</strong>, not punitive</li>
+          <li><strong>Designing for someone else</strong> — handing a level to a sibling and watching them fail</li>
+        </ul>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section id="teachers">
+  <div class="wrap">
+    <div class="eyebrow">FOR TEACHERS &amp; PARENTS</div>
+    <h2>You don't need to know games</h2>
+    <div class="split">
+      <div class="panel dark">
+        <h3>A 40-minute session</h3>
+        <ul>
+          <li><strong>5′</strong> Play a ready-made game. Don't open the file yet.</li>
+          <li><strong>10′</strong> Change three numbers — predict out loud first, then run.</li>
+          <li><strong>10′</strong> Draw their own level picture.</li>
+          <li><strong>10′</strong> Make it <em>fair</em> — tune hearts, speed, jump power.</li>
+          <li><strong>5′</strong> Swap seats and play each other's game.</li>
+        </ul>
+      </div>
+      <div class="panel light">
+        <h3>When they're stuck, say this</h3>
+        <ul>
+          <li>“Run it and show me what happens.”</li>
+          <li>“What did you expect? What happened instead?”</li>
+          <li>“Read the message out loud — it tells you the fix.”</li>
+          <li>“Change one number and run it again.”</li>
+        </ul>
+        <p style="margin-top:10px">Don't fix their file for them. Ask them to describe the square they want, and let them find the numbers.</p>
+      </div>
+    </div>
+    <div class="split" style="margin-top:16px">
+      <div class="panel light">
+        <h3>💬 Errors that teach instead of scare</h3>
+        <pre style="margin:0;font-size:12.5px;line-height:1.65;color:var(--muted);white-space:pre-wrap">Oops — I don't know the shape 'basktet'.
+Try one of these: hero, basket, ship, star...
+(did you mean 'basket'?)</pre>
+      </div>
+      <div class="panel light">
+        <h3>🚧 What this doesn't teach</h3>
+        <p>Writing their own classes, files, algorithms, recursion, testing, version control. This is the on-ramp. The step out is a kid outgrowing <code>hearts()</code> and writing their own spawn logic with <code>free_square()</code>.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section>
+  <div class="wrap">
+    <div class="eyebrow">GET STARTED</div>
+    <h2>Three commands</h2>
+    <div class="split">
+      <div class="panel light"><h3>1 · Play</h3><pre style="margin:0;font-size:13px;line-height:1.7"><span style="color:var(--muted)">$</span> pip install gamebricks
+<span style="color:var(--muted)">$</span> gamebricks maze</pre><p style="margin-top:10px">A real window opens. Arrow keys work.</p></div>
+      <div class="panel light"><h3>2 · Get the code</h3><pre style="margin:0;font-size:13px;line-height:1.7"><span style="color:var(--muted)">$</span> gamebricks copy</pre><p style="margin-top:10px">Seven example games land in their own folder, ready to edit. Running it twice never overwrites their work.</p></div>
+      <div class="panel light"><h3>3 · Start fresh</h3><pre style="margin:0;font-size:13px;line-height:1.7"><span style="color:var(--muted)">$</span> gamebricks new my_game.py</pre><p style="margin-top:10px">A small blank game with <code># &lt;-- CHANGE THESE</code> markers to build on.</p></div>
+    </div>
+    <p class="hint">Python 3.12+. One dependency. Works on Windows, macOS and Linux.</p>
+  </div>
+</section>
+
+<footer>
+  <div class="wrap frow">
+    <div>🧱 <strong style="color:#C2C7DC">GameBricks</strong> — MIT licensed. Made for kids, teachers, and anyone who wants their first program to be something they can play.</div>
+    <div style="display:flex;gap:16px"><a href="https://github.com/kishanpolepalli/gamebricks">GitHub</a><a href="https://github.com/kishanpolepalli/gamebricks#readme">Docs</a><a href="#playground">Try the grid</a></div>
+  </div>
+</footer>
+
+<script>
+(function(){
+  var BRICKS = [
+    {k:'coin',  fn:'coin',  c:'#F2B705'},
+    {k:'ghost', fn:'ghost', c:'#7B5BD6'},
+    {k:'wall',  fn:'wall',  c:'#16192E'},
+    {k:'heart', fn:'heart', c:'#FF78A0'},
+    {k:'flag',  fn:'flag',  c:'#E25A5A'}
+  ];
+  var N = 8, sel = 'coin', placed = {};
+  // one thing on the board to start, so the code panel is never empty
+  placed['3,5'] = 'coin';
+  placed['7,7'] = 'ghost';
+
+  var pal = document.getElementById('palette');
+  BRICKS.forEach(function(b){
+    var el = document.createElement('button');
+    el.className = 'pal';
+    el.type = 'button';
+    el.setAttribute('aria-pressed', b.k === sel);
+    el.innerHTML = '<span class="dot" style="background:' + b.c + '"></span>' + b.k;
+    el.onclick = function(){
+      sel = b.k;
+      Array.prototype.forEach.call(pal.children, function(c, i){
+        c.setAttribute('aria-pressed', BRICKS[i].k === sel);
+      });
+    };
+    pal.appendChild(el);
+  });
+
+  var grid = document.getElementById('grid');
+  for (var up = N - 1; up >= 0; up--) {
+    for (var ax = 0; ax < N; ax++) {
+      var cell = document.createElement('div');
+      cell.className = 'cell';
+      cell.dataset.key = ax + ',' + up;
+      cell.title = 'across=' + ax + ', up=' + up;
+      cell.onclick = function(){
+        if (placed[this.dataset.key]) { delete placed[this.dataset.key]; }
+        else { placed[this.dataset.key] = sel; }
+        draw();
+      };
+      grid.appendChild(cell);
+    }
+  }
+
+  function color(k){
+    for (var i = 0; i < BRICKS.length; i++) if (BRICKS[i].k === k) return BRICKS[i].c;
+    return '#999';
+  }
+
+  function draw(){
+    Array.prototype.forEach.call(grid.children, function(cell){
+      var k = placed[cell.dataset.key];
+      cell.innerHTML = k
+        ? '<span class="g" style="background:' + color(k) + ';' +
+          (k === 'wall' ? 'border-radius:3px;width:74%;height:74%' : '') + '"></span>'
+        : '';
+    });
+    render();
+  }
+
+  function render(){
+    var keys = Object.keys(placed).sort(function(a, b){
+      var A = a.split(','), B = b.split(',');
+      return (+B[1]) - (+A[1]) || (+A[0]) - (+B[0]);
+    });
+    var lines = keys.map(function(key){
+      var p = key.split(',');
+      return 'game.' + placed[key] + '(across=<span class="n">' + p[0] +
+             '</span>, up=<span class="n">' + p[1] + '</span>)';
+    });
+    var body = lines.length
+      ? lines.join('\n')
+      : '<span class="cm"># click a square to place something</span>';
+    document.getElementById('out').innerHTML =
+      '<span class="cm"># my_game.py — this is the whole file</span>\n' +
+      '<span class="k">from</span> gamebricks <span class="k">import</span> Game\n\n' +
+      'game = Game(cells=<span class="n">8</span>)\n' +
+      'game.show_grid()\n' +
+      '<span class="f">hero</span> = game.player(shape=<span class="s">"hero"</span>, control=<span class="s">"arrows"</span>)\n\n' +
+      body + '\n\n' +
+      'game.hearts(<span class="n">2</span>)\n' +
+      'game.win_when(game.collected_all(<span class="s">"coin"</span>))\n' +
+      'game.start()';
+  }
+
+  draw();
+})();
+</script>
+</body>
+</html>
